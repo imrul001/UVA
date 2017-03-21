@@ -28,69 +28,61 @@ public class Main {
 		// "F:\\imrul\\workspace\\UVA\\src\\uva10010\\input.txt"));
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));
-		String line;
-		while ((line = reader.readLine()) != null) {
-			int testCases = Integer.parseInt(line);
-			for (int i = 0; i < testCases; i++) {
-				reader.readLine();
-				String dimention[] = reader.readLine().split(" ");
-				int row = Integer.parseInt(dimention[0]);
-				int column = Integer.parseInt(dimention[1]);
-				char dataArray[][] = new char[row + 1][column + 1];
-				for (int x = 1; x <= row; x++) {
-					char[] lineArray = reader.readLine().toCharArray();
-					int c = 0;
-					for (int y = 1; y <= column; y++) {
-						dataArray[x][y] = Character.toLowerCase(lineArray[c]);
-						c++;
-					}
+		String line = reader.readLine();
+		int testCases = Integer.parseInt(line);
+		for (int i = 0; i < testCases; i++) {
+			reader.readLine();
+			String dimention[] = reader.readLine().split(" ");
+			int row = Integer.parseInt(dimention[0]);
+			int column = Integer.parseInt(dimention[1]);
+			char dataArray[][] = new char[row + 1][column + 1];
+			for (int x = 1; x <= row; x++) {
+				char[] lineArray = reader.readLine().toCharArray();
+				int c = 0;
+				for (int y = 1; y <= column; y++) {
+					dataArray[x][y] = Character.toLowerCase(lineArray[c]);
+					c++;
 				}
-				int numberOfWords = Integer.parseInt(reader.readLine());
-				String words[] = new String[numberOfWords];
-				for (int k = 0; k < numberOfWords; k++) {
-					words[k] = reader.readLine().toLowerCase();
-				}
-				// printDataArray(dataArray);
-				// printArray(words);
+			}
+			int numberOfWords = Integer.parseInt(reader.readLine());
+			String word;
+			for (int k = 0; k < numberOfWords; k++) {
+				word = reader.readLine().toLowerCase();
+				List<Cell> cellList = getFirstCharacterCell(dataArray,
+						word.charAt(0), row, column);
 
-				for (int p = 0; p < words.length; p++) {
-					List<Cell> cellList = getFirstCharacterCell(dataArray,
-							words[p].charAt(0), column);
-					// check in needed for the best match
-					for (Cell cell : cellList) {
-						if (searchWord(cell, dataArray, words[p], column)) {
-							System.out.println(cell.getX_position() + " "
-									+ cell.getY_position());
+				int x_position = row;
+				int y_position = column;
+				for (Cell cell : cellList) {
+					if (searchWord(cell, dataArray, word, row, column)) {
+						if (cell.getX_position() < x_position) {
+							x_position = cell.getX_position();
+							y_position = cell.getY_position();
+						}
+						if (cell.getX_position() == x_position) {
+							if (cell.getY_position() < y_position) {
+								x_position = cell.getX_position();
+								y_position = cell.getY_position();
+							}
 						}
 					}
 				}
+				System.out.println(x_position + " " + y_position);
 			}
-		}
-	}
-
-	void printDataArray(char[][] array) {
-		for (int i = 1; i <= 8; i++) {
-			for (int j = 1; j <= 11; j++) {
-				System.out.print(array[i][j]);
+			if (i != testCases - 1) {
+				System.out.println();
 			}
-			System.out.println();
-		}
-	}
-
-	void printArray(String[] array) {
-		for (int i = 0; i < array.length; i++) {
-			System.out.println(array[i]);
 		}
 	}
 
 	boolean searchWord(Cell startingCell, char[][] dataGrid, String word,
-			int maxColumn) {
+			int maxRow, int maxColumn) {
 		boolean flag = false;
 		if (word.length() == 1) {
 			return flag = true;
 		} else {
 			List<Cell> cellList = getNextCellsList(startingCell, dataGrid,
-					word.charAt(1), maxColumn);
+					word.charAt(1), maxRow, maxColumn);
 			if (word.length() == 2 && cellList.size() > 0) {
 				return flag = true;
 			} else {
@@ -117,14 +109,14 @@ public class Main {
 	}
 
 	List<Cell> getNextCellsList(Cell startingCell, char[][] dataGrid,
-			char secondChar, int maxColumn) {
+			char secondChar, int maxRow, int maxColumn) {
 		List<Cell> cellList = new ArrayList<Cell>();
 
 		int startX = startingCell.getX_position() - 1 >= 1 ? startingCell
 				.getX_position() - 1 : startingCell.getX_position();
 		int startY = startingCell.getY_position() - 1 >= 1 ? startingCell
 				.getY_position() - 1 : startingCell.getY_position() - 1;
-		int endX = startingCell.getX_position() + 1 <= dataGrid.length - 1 ? startingCell
+		int endX = startingCell.getX_position() + 1 <= maxRow ? startingCell
 				.getX_position() + 1 : startingCell.getX_position();
 		int endY = startingCell.getY_position() + 1 <= maxColumn ? startingCell
 				.getY_position() + 1 : startingCell.getY_position();
@@ -150,12 +142,12 @@ public class Main {
 	}
 
 	List<Cell> getFirstCharacterCell(char[][] dataGrid, char firstChar,
-			int maxColumn) {
+			int maxRow, int maxColumn) {
 		int c = 0;
 		int row = 0;
 		int column = 0;
 		List<Cell> cellList = new ArrayList<Cell>();
-		for (int i = 1; i <= dataGrid.length - 1; i++) {
+		for (int i = 1; i <= maxRow; i++) {
 			for (int j = 1; j <= maxColumn; j++) {
 				if (dataGrid[i][j] == firstChar) {
 					row = i;
@@ -166,6 +158,21 @@ public class Main {
 			}
 		}
 		return cellList;
+	}
+
+	void printDataArray(char[][] array) {
+		for (int i = 1; i <= 8; i++) {
+			for (int j = 1; j <= 11; j++) {
+				System.out.print(array[i][j]);
+			}
+			System.out.println();
+		}
+	}
+
+	void printArray(String[] array) {
+		for (int i = 0; i < array.length; i++) {
+			System.out.println(array[i]);
+		}
 	}
 }
 
