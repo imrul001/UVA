@@ -60,11 +60,14 @@ class Main {
 
 	boolean booleanBychecking(String line, char arr[]) {
 		boolean flag = true;
+		String str = String.valueOf(arr);
 		for (int i = 0; i < line.length(); i++) {
 			String q = String.valueOf(line.charAt(i));
-			if (new String(arr).contains(q)) {
-				flag = false;
-				break;
+			for (char c : arr) {
+				if (String.valueOf(c) == q) {
+					flag = false;
+					break;
+				}
 			}
 		}
 		return flag;

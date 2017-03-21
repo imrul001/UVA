@@ -15,8 +15,9 @@ import java.util.List;
  */
 public class Main {
 	public static void main(String[] args) throws IOException {
-		Main myWork = new Main();
-		myWork.Begin();
+		// Main myWork = new Main();
+		// myWork.Begin();
+		System.out.println("got here");
 	}
 
 	/**
