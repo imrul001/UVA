@@ -4,8 +4,8 @@
 package uva10010;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +24,10 @@ public class Main {
 	 * 
 	 */
 	private void Begin() throws IOException {
-		// BufferedReader reader = new BufferedReader(new FileReader(
-		// "F:\\imrul\\workspace\\UVA\\src\\uva10010\\input.txt"));
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				System.in));
+		BufferedReader reader = new BufferedReader(new FileReader(
+				"F:\\imrul\\workspace\\UVA\\src\\uva10010\\input.txt"));
+		// BufferedReader reader = new BufferedReader(new InputStreamReader(
+		// System.in));
 		String line = reader.readLine();
 		int testCases = Integer.parseInt(line);
 		for (int i = 0; i < testCases; i++) {
@@ -92,11 +92,16 @@ public class Main {
 						char nextChar = word.charAt(i);
 						int location[] = getNextCellLocation(lastCell,
 								currentCell);
-						if (dataGrid[location[0]][location[1]] == nextChar) {
-							flag = true;
-							lastCell = currentCell;
-							currentCell = new Cell(nextChar, location[0],
-									location[1]);
+						if (isValidLocation(location, maxRow, maxColumn)) {
+							if (dataGrid[location[0]][location[1]] == nextChar) {
+								flag = true;
+								lastCell = currentCell;
+								currentCell = new Cell(nextChar, location[0],
+										location[1]);
+							} else {
+								flag = false;
+								break;
+							}
 						} else {
 							flag = false;
 							break;
@@ -104,6 +109,15 @@ public class Main {
 					}
 				}
 			}
+		}
+		return flag;
+	}
+
+	boolean isValidLocation(int[] location, int maxRow, int maxColumn) {
+		boolean flag = false;
+		if (location[0] >= 1 && location[0] <= maxRow && location[1] >= 1
+				&& location[1] <= maxColumn) {
+			flag = true;
 		}
 		return flag;
 	}

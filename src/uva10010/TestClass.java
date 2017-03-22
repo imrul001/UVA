@@ -115,9 +115,9 @@ public class TestClass extends TestCase {
 		setDataGrid(dataArray);
 		Main m1 = new Main();
 
-		int[] location = m1.getNextCellLocation(new Cell('a', 3, 4), new Cell(
-				'm', 4, 5));
-		assertEquals(5, location[0]);
-		assertEquals(6, location[1]);
+		int[] location = m1.getNextCellLocation(new Cell('e', 2, 2), new Cell(
+				'a', 1, 1));
+		assertEquals(0, location[0]);
+		assertEquals(0, location[1]);
 	}
 }
