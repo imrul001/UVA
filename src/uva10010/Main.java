@@ -108,19 +108,18 @@ public class Main {
 		return flag;
 	}
 
+	// Find outs the cells that contains the second character of the word
 	List<Cell> getNextCellsList(Cell startingCell, char[][] dataGrid,
 			char secondChar, int maxRow, int maxColumn) {
 		List<Cell> cellList = new ArrayList<Cell>();
-
 		int startX = startingCell.getX_position() - 1 >= 1 ? startingCell
 				.getX_position() - 1 : startingCell.getX_position();
 		int startY = startingCell.getY_position() - 1 >= 1 ? startingCell
-				.getY_position() - 1 : startingCell.getY_position() - 1;
+				.getY_position() - 1 : startingCell.getY_position();
 		int endX = startingCell.getX_position() + 1 <= maxRow ? startingCell
 				.getX_position() + 1 : startingCell.getX_position();
 		int endY = startingCell.getY_position() + 1 <= maxColumn ? startingCell
 				.getY_position() + 1 : startingCell.getY_position();
-
 		for (int i = startX; i <= endX; i++) {
 			for (int j = startY; j <= endY; j++) {
 				if (dataGrid[i][j] == secondChar) {
@@ -132,6 +131,20 @@ public class Main {
 		return cellList;
 	}
 
+	// Find the cell matrix around the first found character
+	String getSearchMatrix(Cell startingCell, int maxRow, int maxColumn) {
+		int startX = startingCell.getX_position() - 1 >= 1 ? startingCell
+				.getX_position() - 1 : startingCell.getX_position();
+		int startY = startingCell.getY_position() - 1 >= 1 ? startingCell
+				.getY_position() - 1 : startingCell.getY_position();
+		int endX = startingCell.getX_position() + 1 <= maxRow ? startingCell
+				.getX_position() + 1 : startingCell.getX_position();
+		int endY = startingCell.getY_position() + 1 <= maxColumn ? startingCell
+				.getY_position() + 1 : startingCell.getY_position();
+		return startX + " " + startY + " " + endX + " " + endY;
+	}
+
+	// Find the next cell location based on previous two cells
 	int[] getNextCellLocation(Cell lastCell, Cell currentCell) {
 		int location[] = new int[2];
 		int diffX = lastCell.getX_position() - currentCell.getX_position();
@@ -141,6 +154,7 @@ public class Main {
 		return location;
 	}
 
+	// Finds out the cells that contains the first character of the word
 	List<Cell> getFirstCharacterCell(char[][] dataGrid, char firstChar,
 			int maxRow, int maxColumn) {
 		int c = 0;
