@@ -50,24 +50,14 @@ public class Main {
 				word = reader.readLine().toLowerCase();
 				List<Cell> cellList = getFirstCharacterCell(dataArray,
 						word.charAt(0), row, column);
+				Cell resultingCell = new Cell();
+				resultingCell = searchAndPrintCell(cellList, dataArray, word,
+						row, column);
 
-				int x_position = row;
-				int y_position = column;
-				for (Cell cell : cellList) {
-					if (searchWord(cell, dataArray, word, row, column)) {
-						if (cell.getX_position() < x_position) {
-							x_position = cell.getX_position();
-							y_position = cell.getY_position();
-						}
-						if (cell.getX_position() == x_position) {
-							if (cell.getY_position() < y_position) {
-								x_position = cell.getX_position();
-								y_position = cell.getY_position();
-							}
-						}
-					}
+				if (resultingCell != null) {
+					System.out.println(resultingCell.getX_position() + " "
+							+ resultingCell.getY_position());
 				}
-				System.out.println(x_position + " " + y_position);
 			}
 			if (i != testCases - 1) {
 				System.out.println();
@@ -75,6 +65,19 @@ public class Main {
 		}
 	}
 
+	Cell searchAndPrintCell(List<Cell> cellList, char[][] dataArray,
+			String word, int row, int column) {
+		Cell resultingcell = new Cell();
+		for (Cell cell : cellList) {
+			if (searchWord(cell, dataArray, word, row, column)) {
+				resultingcell = cell;
+				break;
+			}
+		}
+		return resultingcell;
+	}
+
+	// This method causing wrong answer, should be resolved
 	boolean searchWord(Cell startingCell, char[][] dataGrid, String word,
 			int maxRow, int maxColumn) {
 		boolean flag = false;
@@ -107,6 +110,9 @@ public class Main {
 							break;
 						}
 					}
+					if (flag) {
+						break;
+					}
 				}
 			}
 		}
@@ -134,28 +140,19 @@ public class Main {
 				.getX_position() + 1 : startingCell.getX_position();
 		int endY = startingCell.getY_position() + 1 <= maxColumn ? startingCell
 				.getY_position() + 1 : startingCell.getY_position();
+
 		for (int i = startX; i <= endX; i++) {
 			for (int j = startY; j <= endY; j++) {
-				if (dataGrid[i][j] == secondChar) {
-					Cell c1 = new Cell(secondChar, i, j);
-					cellList.add(c1);
+				if (startingCell.getX_position() != i
+						|| startingCell.getY_position() != j) {
+					if (dataGrid[i][j] == secondChar) {
+						Cell c1 = new Cell(secondChar, i, j);
+						cellList.add(c1);
+					}
 				}
 			}
 		}
 		return cellList;
-	}
-
-	// Find the cell matrix around the first found character
-	String getSearchMatrix(Cell startingCell, int maxRow, int maxColumn) {
-		int startX = startingCell.getX_position() - 1 >= 1 ? startingCell
-				.getX_position() - 1 : startingCell.getX_position();
-		int startY = startingCell.getY_position() - 1 >= 1 ? startingCell
-				.getY_position() - 1 : startingCell.getY_position();
-		int endX = startingCell.getX_position() + 1 <= maxRow ? startingCell
-				.getX_position() + 1 : startingCell.getX_position();
-		int endY = startingCell.getY_position() + 1 <= maxColumn ? startingCell
-				.getY_position() + 1 : startingCell.getY_position();
-		return startX + " " + startY + " " + endX + " " + endY;
 	}
 
 	// Find the next cell location based on previous two cells
@@ -171,7 +168,6 @@ public class Main {
 	// Finds out the cells that contains the first character of the word
 	List<Cell> getFirstCharacterCell(char[][] dataGrid, char firstChar,
 			int maxRow, int maxColumn) {
-		int c = 0;
 		int row = 0;
 		int column = 0;
 		List<Cell> cellList = new ArrayList<Cell>();
@@ -182,25 +178,9 @@ public class Main {
 					column = j;
 					cellList.add(new Cell(firstChar, row, column));
 				}
-				c++;
 			}
 		}
 		return cellList;
-	}
-
-	void printDataArray(char[][] array) {
-		for (int i = 1; i <= 8; i++) {
-			for (int j = 1; j <= 11; j++) {
-				System.out.print(array[i][j]);
-			}
-			System.out.println();
-		}
-	}
-
-	void printArray(String[] array) {
-		for (int i = 0; i < array.length; i++) {
-			System.out.println(array[i]);
-		}
 	}
 }
 
@@ -214,6 +194,10 @@ class Cell {
 		this.character = character;
 		this.x_position = x_position;
 		this.y_position = y_position;
+	}
+
+	public Cell() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public char getCharacter() {

@@ -1,5 +1,6 @@
 package uva10010;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -41,8 +42,8 @@ public class TestClass extends TestCase {
 
 		setDataGrid(dataArray);
 		Main m1 = new Main();
-		assertEquals(4, m1.getFirstCharacterCell(getDataGrid(), 'g', 8, 11)
-				.size());
+		assertEquals(8, m1.getFirstCharacterCell(getDataGrid(), 'd', 8, 11)
+				.get(1).getY_position());
 	}
 
 	@Test
@@ -59,47 +60,20 @@ public class TestClass extends TestCase {
 
 		setDataGrid(dataArray);
 		Main m1 = new Main();
-		Cell startingCell = new Cell('s', 4, 9);
-		char secondChar = 'r';
+		Cell startingCell = new Cell('d', 2, 8);
+		char secondChar = 'o';
 		int maxRow = 8;
 		int maxColumn = 11;
 
 		List<Cell> cellList = m1.getNextCellsList(startingCell, getDataGrid(),
 				secondChar, maxRow, maxColumn);
-		assertEquals(4, cellList.get(1).x_position);
-		Cell expectedCell1 = new Cell('r', 3, 10);
-		Cell expectedCell2 = new Cell('r', 4, 10);
+		assertEquals(3, cellList.get(1).x_position);
+		Cell expectedCell1 = new Cell('o', 2, 9);
+		Cell expectedCell2 = new Cell('o', 3, 9);
 		assertEquals(expectedCell1.x_position, cellList.get(0).getX_position());
 		assertEquals(expectedCell2.x_position, cellList.get(1).getX_position());
 	}
 
-	@Test
-	public void testGetSearchMatrix() {
-		char[][] dataArray = new char[][] {
-				{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'g', 'g' },
-				{ 'h', 'e', 'b', 'k', 'w', 'a', 'l', 'd', 'o', 'r', 'k' },
-				{ 'f', 't', 'y', 'a', 'w', 'a', 'l', 'd', 'o', 'r', 'm' },
-				{ 'f', 't', 's', 'i', 'm', 'r', 'l', 'q', 's', 'r', 'c' },
-				{ 'b', 'y', 'o', 'a', 'r', 'b', 'e', 'd', 'e', 'y', 'v' },
-				{ 'k', 'l', 'c', 'b', 'q', 'w', 'i', 'k', 'o', 'm', 'k' },
-				{ 's', 't', 'r', 'e', 'b', 'g', 'a', 'd', 'h', 'r', 'b' },
-				{ 'y', 'u', 'i', 'q', 'l', 'x', 'c', 'n', 'b', 'j', 'f' } };
-
-		setDataGrid(dataArray);
-		Main m1 = new Main();
-		String[] array = m1.getSearchMatrix(new Cell('y', 8, 1), 8, 11).split(
-				" ");
-		int startX = Integer.valueOf(array[0]);
-		int startY = Integer.valueOf(array[1]);
-		int endX = Integer.valueOf(array[2]);
-		int endY = Integer.valueOf(array[3]);
-		assertEquals(7, startX);
-		assertEquals(1, startY);
-		assertEquals(8, endX);
-		assertEquals(2, endY);
-	}
-
-	// this method causing runtime error, which must be investigated
 	@Test
 	public void testGetNextCellLocation() {
 		char[][] dataArray = new char[][] {
@@ -115,9 +89,67 @@ public class TestClass extends TestCase {
 		setDataGrid(dataArray);
 		Main m1 = new Main();
 
-		int[] location = m1.getNextCellLocation(new Cell('e', 2, 2), new Cell(
-				'a', 1, 1));
-		assertEquals(0, location[0]);
-		assertEquals(0, location[1]);
+		int[] location = m1.getNextCellLocation(new Cell('o', 2, 9), new Cell(
+				'r', 2, 10));
+		assertEquals(2, location[0]);
+		assertEquals(11, location[1]);
+	}
+
+	@Test
+	public void testSearchWord() {
+		char[][] dataArray = new char[][] {
+				{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'g', 'g' },
+				{ 'h', 'e', 'b', 'k', 'w', 'a', 'l', 'd', 'o', 'r', 'k' },
+				{ 'f', 't', 'y', 'a', 'w', 'a', 'l', 'd', 'o', 'r', 'm' },
+				{ 'f', 't', 's', 'i', 'm', 'r', 'l', 'q', 's', 'r', 'c' },
+				{ 'b', 'y', 'o', 'a', 'r', 'b', 'e', 'd', 'e', 'y', 'v' },
+				{ 'k', 'l', 'c', 'b', 'q', 'w', 'i', 'k', 'o', 'm', 'k' },
+				{ 's', 't', 'r', 'e', 'b', 'g', 'a', 'd', 'h', 'r', 'b' },
+				{ 'y', 'u', 'i', 'q', 'l', 'x', 'c', 'n', 'b', 'j', 'f' } };
+
+		setDataGrid(dataArray);
+		Main m1 = new Main();
+
+		Cell startingCell = new Cell('d', 2, 8);
+		assertEquals(true,
+				m1.searchWord(startingCell, getDataGrid(), "dork", 8, 11));
+
+	}
+
+	@Test
+	public void testSearchAndPrintCell() {
+		char[][] dataArray = new char[][] {
+				{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'g', 'g' },
+				{ 'h', 'e', 'b', 'k', 'w', 'a', 'l', 'd', 'o', 'r', 'k' },
+				{ 'f', 't', 'y', 'a', 'w', 'a', 'l', 'd', 'o', 'r', 'm' },
+				{ 'f', 't', 's', 'i', 'm', 'r', 'l', 'q', 's', 'r', 'c' },
+				{ 'b', 'y', 'o', 'a', 'r', 'b', 'e', 'd', 'e', 'y', 'v' },
+				{ 'k', 'l', 'c', 'b', 'q', 'w', 'i', 'k', 'o', 'm', 'k' },
+				{ 's', 't', 'r', 'e', 'b', 'g', 'a', 'd', 'h', 'r', 'b' },
+				{ 'y', 'u', 'i', 'q', 'l', 'x', 'c', 'n', 'b', 'j', 'f' } };
+
+		setDataGrid(dataArray);
+		Main m1 = new Main();
+		List<Cell> cellList = new ArrayList<Cell>();
+		cellList.add(new Cell('a', 1, 1));
+		cellList.add(new Cell('a', 2, 6));
+		cellList.add(new Cell('a', 3, 4));
+		cellList.add(new Cell('a', 3, 6));
+		cellList.add(new Cell('a', 5, 4));
+		cellList.add(new Cell('a', 7, 7));
+		assertEquals(1,
+				m1.searchAndPrintCell(cellList, getDataGrid(), "ab", 8, 11)
+						.getX_position());
+		assertEquals(1,
+				m1.searchAndPrintCell(cellList, getDataGrid(), "ab", 8, 11)
+						.getY_position());
+
+	}
+
+	@Test
+	public void testIsValidLocation() {
+		Main m1 = new Main();
+		int[] location = new int[] { 2, 11 };
+		assertEquals(true, m1.isValidLocation(location, 8, 11));
 	}
 }
