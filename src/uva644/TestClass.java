@@ -8,7 +8,7 @@ public class TestClass extends TestCase {
 
 	@Test
 	public void testIsPrefixMatch() {
-		Main m = new Main();
+		Main_BF m = new Main_BF();
 		String prefix = "001";
 		String code = "0011001";
 		assertEquals(false, m.isPrefixMatch(prefix, code));
