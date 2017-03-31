@@ -4,16 +4,25 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
 		Main myWork = new Main();
 		// myWork.begin();
-		String str1 = "01";
-		String str2 = "011";
-		System.out.println(str2.substring(0, 2));
+		// String str1 = "01";
+		// String str2 = "011";
+		// // System.out.println(str2.substring(0, 2));
+		// List<String> codes = new ArrayList<String>();
+		// codes.add(str1);
+		// codes.add(str2);
+		//
+		// Trie t1 = new Trie(codes);
+		// System.out.println(t1.isPrefix(str1));
 	}
 
 	private void begin() throws IOException {
@@ -61,5 +70,32 @@ public class Main {
 			}
 		}
 		return flag;
+	}
+}
+
+class Trie extends TreeSet<String> {
+	private List<String> codes = new ArrayList<String>();
+
+	public Trie(Collection<String> codes) {
+		super(codes);
+	}
+
+	public boolean isPrefix(String prefix) {
+		String nextWord = ceiling(prefix);
+		if (nextWord == null) {
+			return false;
+		}
+		if (nextWord.equals(prefix)) {
+			Set<String> tail = tailSet(nextWord, false);
+			if (tail.isEmpty()) {
+				return false;
+			}
+			nextWord = tail.iterator().next();
+		}
+		return nextWord.startsWith(prefix);
+	}
+
+	public boolean contains(String word) {
+		return super.contains(word);
 	}
 }
