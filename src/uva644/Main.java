@@ -16,7 +16,7 @@ public class Main {
 		myWork.begin();
 	}
 
-	public void begin() throws IOException {
+	void begin() throws IOException {
 		// BufferedReader reader = new BufferedReader(new FileReader(
 		// "F:\\imrul\\workspace\\UVA\\src\\uva644\\input.txt"));
 		// BufferedReader reader = new BufferedReader(new FileReader(
