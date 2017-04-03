@@ -1,8 +1,7 @@
 package uva100;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class Main {
 
@@ -11,34 +10,13 @@ public class Main {
 		myWork.begin();
 	}
 
-	private void begin() throws IOException {
+	void begin() throws IOException {
 		// BufferedReader reader = new BufferedReader(new FileReader(
 		// "/home/linux/tutorial/UVA/src/uva100/input.txt"));
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				System.in));
-		String line;
-		while ((line = reader.readLine()) != null) {
-			StringBuffer start = new StringBuffer();
-			StringBuffer end = new StringBuffer();
-			int i = 0, j = 0;
-			int flag = 0;
-			for (int index = 0; index < line.length(); index++) {
-				if (flag != 1) {
-					if (line.charAt(index) == ' ') {
-						flag = 1;
-						i = Integer.valueOf(start.toString());
-					} else {
-						start.append(line.charAt(index));
-					}
-				} else {
-					if (line.charAt(index) != ' ') {
-						end.append(line.charAt(index));
-					}
-					if (index == line.length() - 1) {
-						j = Integer.valueOf(end.toString());
-					}
-				}
-			}
+		Scanner sc = new Scanner(System.in);
+		while (sc.hasNext()) {
+			int i = sc.nextInt();
+			int j = sc.nextInt();
 			int x = i;
 			int y = j;
 			if (x > y) {
@@ -57,7 +35,7 @@ public class Main {
 		}
 	}
 
-	private int getCycle(int input) {
+	int getCycle(long input) {
 		int cycleCount = 1;
 		while (input != 1) {
 			if (input % 2 == 0) {
