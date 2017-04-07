@@ -1,23 +1,23 @@
 package uva400;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Main {
+public class Main_Bf {
 	public static void main(String[] args) throws IOException {
-		Main myWork = new Main();
+		Main_Bf myWork = new Main_Bf();
 		myWork.begin();
 	}
 
 	private void begin() throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(
-				"F:\\imrul\\workspace\\UVA\\src\\uva400\\input.txt"));
-		// BufferedReader reader = new BufferedReader(new InputStreamReader(
-		// System.in));
+		// BufferedReader reader = new BufferedReader(new FileReader(
+		// "F:\\imrul\\workspace\\UVA\\src\\uva400\\input.txt"));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				System.in));
 		String line;
 		while ((line = reader.readLine()) != null) {
 			int numberOfFiles = Integer.parseInt(line);
@@ -31,34 +31,53 @@ public class Main {
 				}
 				fileNames.add(new MyString(fileName));
 			}
-			solveRewrite(fileNames, maxNameLength);
+			solve(fileNames, maxNameLength);
 			fileNames.removeAll(fileNames);
 		}
 	}
 
-	private void solveRewrite(List<MyString> fileNames, int maxNameLength) {
+	private void solve(List<MyString> fileNames, int maxNameLength) {
 		// maximum number of possible columns
-		float maxNumber0fColumns = ((60) / (maxNameLength + 2));
+		int maxNumber0fColumns = ((60) / (maxNameLength + 2));
 		float numberOfFiles = (float) fileNames.size();
 		int row = 0, column = 0;
-		float checkRow = 100;
-		float index = maxNumber0fColumns;
-		for (float i = index; i > 0; i--) {
+		for (float i = 1;; i++) {
 			float temp = numberOfFiles / i;
-			if (numberOfFiles % i != 0) {
-				temp = temp + 1;
-			}
-			if (temp < checkRow) {
-				checkRow = temp;
-				row = (int) checkRow;
-				column = (int) i;
-			} else {
+			if (temp <= maxNumber0fColumns) {
+				column = (int) temp;
+				row = (int) i;
 				break;
 			}
 		}
 		Collections.sort(fileNames);
 		printResult(fileNames, row, column, maxNameLength + 2);
 	}
+
+	// void printResult(List<MyString> fileNames, int row, int column,
+	// int maxLength) {
+	// for (int i = 1; i <= 60; i++) {
+	// System.out.print("-");
+	// }
+	// System.out.println();
+	// for (int i = 0; i < row; i++) {
+	// List<String> r = new ArrayList<String>();
+	// String str1 = fileNames.get(i).getFileName();
+	// r.add(str1 + printSpace(maxLength - str1.length()));
+	// int index = i + row;
+	// for (int j = 0; j < column; j++) {
+	// if (index >= fileNames.size()) {
+	// break;
+	// }
+	// String str2 = fileNames.get(index).getFileName();
+	// r.add(str2 + printSpace(maxLength - str2.length()));
+	// index = index + row;
+	// }
+	// for (String fileName : r) {
+	// System.out.print(fileName);
+	// }
+	// System.out.println();
+	// }
+	// }
 
 	void printResult(List<MyString> fileNames, int row, int column,
 			int maxLength) {
@@ -68,7 +87,7 @@ public class Main {
 			String str1 = fileNames.get(i).getFileName();
 			System.out.print(str1 + printSpaceCheck(maxLength - str1.length()));
 			int index = i + row;
-			for (int j = 0; j < column - 1; j++) {
+			for (int j = 0; j < column; j++) {
 				if (index >= fileNames.size()) {
 					break;
 				}
@@ -79,6 +98,14 @@ public class Main {
 			}
 			System.out.println();
 		}
+	}
+
+	static String printSpace(int size) {
+		String str = "";
+		for (int i = 0; i < size; i++) {
+			str = str + " ";
+		}
+		return str;
 	}
 
 	static String printSpaceCheck(int size) {
