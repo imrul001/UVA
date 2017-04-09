@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Main {
@@ -13,8 +14,11 @@ public class Main {
 	}
 
 	void begin() throws IOException {
+		// BufferedReader reader = new BufferedReader(new FileReader(
+		// "/home/linux/tutorial/UVA/src/uva10194/input.txt"));
+
 		BufferedReader reader = new BufferedReader(new FileReader(
-				"/home/linux/tutorial/UVA/src/uva10194/input.txt"));
+				"F:\\imrul\\workspace\\UVA\\src\\uva10194\\input.txt"));
 		String line;
 		while ((line = reader.readLine()) != null) {
 			int numberOfTestCases = Integer.parseInt(line);
@@ -30,16 +34,19 @@ public class Main {
 				for (int k = 0; k < numberOfResults; k++) {
 					results.add(reader.readLine());
 				}
-				solve(teams, results);
+				solve(teams, results, nameOfTournament);
 			}
 		}
 
 	}
 
-	private void solve(List<Team> teams, List<String> results) {
+	private void solve(List<Team> teams, List<String> results,
+			String nameOfTournament) {
+		int index = 0;
+		List<Team> processedTeams = new ArrayList<Team>();
 		for (Team team : teams) {
 			String name = team.getName();
-			int points = 0, goal = 0, win = 0, lose = 0, conGoal = 0;
+			int gamePlayed = 0, win = 0, loss = 0, ties = 0, goalScored = 0, goalAgainst = 0;
 			int count = 0;
 			for (String result : results) {
 				String[] parts = result.split("#");
@@ -47,29 +54,92 @@ public class Main {
 					count++;
 					String[] goalParts = parts[1].split("@");
 					if (parts[0].equals(name)) {
-						goal = goal + Integer.parseInt(goalParts[0]);
-						conGoal = conGoal + Integer.parseInt(goalParts[1]);
+						gamePlayed++;
+						goalScored = goalScored
+								+ Integer.parseInt(goalParts[0]);
+						goalAgainst = goalAgainst
+								+ Integer.parseInt(goalParts[1]);
+						if (Integer.parseInt(goalParts[0]) > Integer
+								.parseInt(goalParts[1])) {
+							win++;
+						}
+						if (Integer.parseInt(goalParts[1]) > Integer
+								.parseInt(goalParts[0])) {
+							loss++;
+						}
+						if (Integer.parseInt(goalParts[1]) == Integer
+								.parseInt(goalParts[0])) {
+							ties++;
+						}
 					} else {
-						goal = goal + Integer.parseInt(goalParts[1]);
-						conGoal = conGoal + Integer.parseInt(goalParts[1]);
+						gamePlayed++;
+						goalScored = goalScored
+								+ Integer.parseInt(goalParts[1]);
+						goalAgainst = goalAgainst
+								+ Integer.parseInt(goalParts[1]);
+						if (Integer.parseInt(goalParts[0]) > Integer
+								.parseInt(goalParts[1])) {
+							loss++;
+						}
+						if (Integer.parseInt(goalParts[1]) > Integer
+								.parseInt(goalParts[0])) {
+							win++;
+						}
+						if (Integer.parseInt(goalParts[1]) == Integer
+								.parseInt(goalParts[0])) {
+							ties++;
+						}
 					}
 				}
 				if (count == teams.size() - 1) {
 					break;
 				}
 			}
-		}
+			team.setWin(win);
+			team.setGamePlayed(gamePlayed);
+			team.setLoss(loss);
+			team.setTies(ties);
+			team.setGoalScored(goalScored);
+			team.setGoatAgainst(goalAgainst);
+			team.setGoalDifference(goalScored - goalAgainst);
+			team.setPoints(getPoints(win, loss, ties));
+			processedTeams.add(team);
+			index++;
 
+		}
+		Collections.reverse(processedTeams);
+		printResult(processedTeams, nameOfTournament);
+
+	}
+
+	private void printResult(List<Team> teams, String nameOfTournament) {
+		System.out.println(nameOfTournament);
+		int index = 1;
+		for (Team team : teams) {
+			System.out.println(index + ") " + team.getName() + " "
+					+ team.getPoints() + "p, " + team.getGamePlayed() + "g ("
+					+ team.getWin() + "-" + team.getTies() + "-"
+					+ team.getLoss() + "), " + team.getGoalDifference()
+					+ "gd (" + team.getGoalScored() + "-"
+					+ team.getGoatAgainst() + ")");
+			index++;
+		}
+	}
+
+	private int getPoints(int win, int loss, int ties) {
+		return (win * 3) + (loss * 0) + (ties * 1);
 	}
 }
 
 class Team implements Comparable<Team> {
 	private String name;
+	private int gamePlayed;
 	private int win;
 	private int loss;
-	private int draw;
-	private int goal;
-	private int conGoal;
+	private int ties;
+	private int goalScored;
+	private int goatAgainst;
+	private int goalDifference;
 	private int points;
 
 	public String getName() {
@@ -78,6 +148,14 @@ class Team implements Comparable<Team> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getGamePlayed() {
+		return gamePlayed;
+	}
+
+	public void setGamePlayed(int gamePlayed) {
+		this.gamePlayed = gamePlayed;
 	}
 
 	public int getWin() {
@@ -96,28 +174,36 @@ class Team implements Comparable<Team> {
 		this.loss = loss;
 	}
 
-	public int getDraw() {
-		return draw;
+	public int getTies() {
+		return ties;
 	}
 
-	public void setDraw(int draw) {
-		this.draw = draw;
+	public void setTies(int ties) {
+		this.ties = ties;
 	}
 
-	public int getGoal() {
-		return goal;
+	public int getGoalScored() {
+		return goalScored;
 	}
 
-	public void setGoal(int goal) {
-		this.goal = goal;
+	public void setGoalScored(int goalScored) {
+		this.goalScored = goalScored;
 	}
 
-	public int getConGoal() {
-		return conGoal;
+	public int getGoatAgainst() {
+		return goatAgainst;
 	}
 
-	public void setConGoal(int conGoal) {
-		this.conGoal = conGoal;
+	public void setGoatAgainst(int goatAgainst) {
+		this.goatAgainst = goatAgainst;
+	}
+
+	public int getGoalDifference() {
+		return goalDifference;
+	}
+
+	public void setGoalDifference(int goalDifference) {
+		this.goalDifference = goalDifference;
 	}
 
 	public int getPoints() {
@@ -125,18 +211,6 @@ class Team implements Comparable<Team> {
 	}
 
 	public void setPoints(int points) {
-		this.points = points;
-	}
-
-	public Team(String name, int win, int loss, int draw, int goal,
-			int conGoal, int points) {
-		super();
-		this.name = name;
-		this.win = win;
-		this.loss = loss;
-		this.draw = draw;
-		this.goal = goal;
-		this.conGoal = conGoal;
 		this.points = points;
 	}
 
