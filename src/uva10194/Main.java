@@ -1,8 +1,11 @@
 package uva10194;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,11 +17,10 @@ public class Main {
 	}
 
 	void begin() throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(
-				"/home/linux/tutorial/UVA/src/uva10194/input.txt"));
-
-		// BufferedReader reader = new BufferedReader(new InputStreamReader(
-		// System.in));
+		// BufferedReader reader = new BufferedReader(new FileReader(
+		// "/home/linux/tutorial/UVA/src/uva10194/input.txt"));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				System.in, "ISO-8859-1"));
 		String line;
 		while ((line = reader.readLine()) != null) {
 			int numberOfTestCases = Integer.parseInt(line);
@@ -34,24 +36,23 @@ public class Main {
 				for (int k = 0; k < numberOfResults; k++) {
 					results.add(reader.readLine());
 				}
-				solve(teams, results, nameOfTournament);
+				solve(teams, results, nameOfTournament,
+						i == numberOfTestCases - 1);
 			}
 		}
-
+		reader.close();
 	}
 
 	private void solve(List<Team> teams, List<String> results,
-			String nameOfTournament) {
-		int index = 0;
+			String nameOfTournament, boolean isLast)
+			throws UnsupportedEncodingException {
 		List<Team> processedTeams = new ArrayList<Team>();
 		for (Team team : teams) {
 			String name = team.getName();
 			int gamePlayed = 0, win = 0, loss = 0, ties = 0, goalScored = 0, goalAgainst = 0;
-			int count = 0;
 			for (String result : results) {
 				String[] parts = result.split("#");
 				if (parts[0].equals(name) || parts[2].equals(name)) {
-					count++;
 					String[] goalParts = parts[1].split("@");
 					if (parts[0].equals(name)) {
 						gamePlayed++;
@@ -91,9 +92,6 @@ public class Main {
 						}
 					}
 				}
-				if (count == teams.size() - 1) {
-					break;
-				}
 			}
 			team.setWin(win);
 			team.setGamePlayed(gamePlayed);
@@ -104,27 +102,30 @@ public class Main {
 			team.setGoalDifference(goalScored - goalAgainst);
 			team.setPoints(getPoints(win, loss, ties));
 			processedTeams.add(team);
-			index++;
-
 		}
-		Collections.sort(processedTeams, Collections.reverseOrder());
-		printResult(processedTeams, nameOfTournament);
+		Collections.sort(processedTeams);
+		printResult(processedTeams, nameOfTournament, isLast);
 
 	}
 
-	private void printResult(List<Team> teams, String nameOfTournament) {
-		System.out.println(nameOfTournament);
+	private void printResult(List<Team> teams, String nameOfTournament,
+			boolean isLast) throws UnsupportedEncodingException {
+		PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out,
+				"ISO-8859-1"));
+		out.println(nameOfTournament);
 		int index = 1;
 		for (Team team : teams) {
-			System.out.println(index + ") " + team.getName() + " "
-					+ team.getPoints() + "p, " + team.getGamePlayed() + "g ("
-					+ team.getWin() + "-" + team.getTies() + "-"
-					+ team.getLoss() + "), " + team.getGoalDifference()
-					+ "gd (" + team.getGoalScored() + "-"
-					+ team.getGoatAgainst() + ")");
+			out.println(index + ") " + team.getName() + " " + team.getPoints()
+					+ "p, " + team.getGamePlayed() + "g (" + team.getWin()
+					+ "-" + team.getTies() + "-" + team.getLoss() + "), "
+					+ team.getGoalDifference() + "gd (" + team.getGoalScored()
+					+ "-" + team.getGoatAgainst() + ")");
 			index++;
 		}
-		System.out.println();
+		if (!isLast) {
+			out.println();
+		}
+		out.flush();
 	}
 
 	private int getPoints(int win, int loss, int ties) {
@@ -220,7 +221,26 @@ class Team implements Comparable<Team> {
 	}
 
 	public int compareTo(Team o) {
-		return this.points - o.points;
+		int value1 = o.points - this.points;
+		if (value1 != 0) {
+			return value1;
+		}
+		int value2 = o.win - this.win;
+		if (value2 != 0) {
+			return value2;
+		}
+		int value3 = o.goalDifference - this.goalDifference;
+		if (value3 != 0) {
+			return value3;
+		}
+		int value4 = o.goalScored - this.goalScored;
+		if (value4 != 0) {
+			return value4;
+		}
+		int value5 = this.gamePlayed - o.gamePlayed;
+		if (value5 != 0) {
+			return value5;
+		}
+		return this.name.toLowerCase().compareTo(o.name.toLowerCase());
 	}
-
 }
