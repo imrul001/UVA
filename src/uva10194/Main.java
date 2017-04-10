@@ -14,11 +14,11 @@ public class Main {
 	}
 
 	void begin() throws IOException {
-		// BufferedReader reader = new BufferedReader(new FileReader(
-		// "/home/linux/tutorial/UVA/src/uva10194/input.txt"));
-
 		BufferedReader reader = new BufferedReader(new FileReader(
-				"F:\\imrul\\workspace\\UVA\\src\\uva10194\\input.txt"));
+				"/home/linux/tutorial/UVA/src/uva10194/input.txt"));
+
+		// BufferedReader reader = new BufferedReader(new InputStreamReader(
+		// System.in));
 		String line;
 		while ((line = reader.readLine()) != null) {
 			int numberOfTestCases = Integer.parseInt(line);
@@ -76,7 +76,7 @@ public class Main {
 						goalScored = goalScored
 								+ Integer.parseInt(goalParts[1]);
 						goalAgainst = goalAgainst
-								+ Integer.parseInt(goalParts[1]);
+								+ Integer.parseInt(goalParts[0]);
 						if (Integer.parseInt(goalParts[0]) > Integer
 								.parseInt(goalParts[1])) {
 							loss++;
@@ -107,7 +107,7 @@ public class Main {
 			index++;
 
 		}
-		Collections.reverse(processedTeams);
+		Collections.sort(processedTeams, Collections.reverseOrder());
 		printResult(processedTeams, nameOfTournament);
 
 	}
@@ -124,6 +124,7 @@ public class Main {
 					+ team.getGoatAgainst() + ")");
 			index++;
 		}
+		System.out.println();
 	}
 
 	private int getPoints(int win, int loss, int ties) {
