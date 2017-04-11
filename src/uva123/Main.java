@@ -1,9 +1,10 @@
 package uva123;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Main {
@@ -13,12 +14,15 @@ public class Main {
 	}
 
 	private void begin() throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(
-				"F:\\imrul\\workspace\\UVA\\src\\uva123\\input.txt"));
+		// BufferedReader reader = new BufferedReader(new FileReader(
+		// "/home/linux/tutorial/UVA/src/uva123/input1.txt"));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				System.in));
 		String line;
-		List<MyString> ignoreList = new ArrayList<MyString>();
+		List<String> ignoreList = new ArrayList<String>();
 		List<String> titles = new ArrayList<String>();
-		List<MyString> words = new ArrayList<MyString>();
+		List<String> CopyTitles = new ArrayList<String>();
+		List<String> words = new ArrayList<String>();
 		boolean titleStart = false;
 		while ((line = reader.readLine()) != null) {
 			if (line.equals("::")) {
@@ -26,58 +30,52 @@ public class Main {
 			}
 			if (titleStart && !line.equals("::")) {
 				titles.add(line);
-				String[] strArray = line.toLowerCase().split(" ");
-				for (String str : strArray) {
-					words.add(new MyString(str));
-				}
+				CopyTitles.add(line);
+				Collections.addAll(words, line.toLowerCase().split(" "));
 			}
 			if (!titleStart) {
-				ignoreList.add(new MyString(line.toLowerCase()));
+				ignoreList.add(line.toLowerCase());
 			}
 		}
-		solve(ignoreList, titles, words);
+		words.removeAll(ignoreList);
+		Collections.sort(words);
+		solve(titles, words, CopyTitles);
 		System.exit(0);
 	}
 
-	private void solve(List<MyString> ignoreList, List<String> titles,
-			List<MyString> words) {
-		printList(ignoreList);
-		printList(words);
-		for (MyString s : ignoreList) {
-			for (MyString str : words) {
-				if (s.getWord().equals(str.getWord())) {
-					words.remove(str);
+	private void solve(List<String> titles, List<String> words,
+			List<String> copyTitles) {
+		for (String word : words) {
+			for (int i = 0; i < titles.size(); i++) {
+				if (copyTitles.get(i).toLowerCase().contains(word)) {
+					String element = copyTitles.get(i).toLowerCase()
+							.replaceFirst(word, printSpace(word.length()));
+					int StartingOffset = copyTitles.get(i).toLowerCase()
+							.indexOf(word);
+					copyTitles.add(i, element);
+					copyTitles.remove(i + 1);
+					printResult(word, titles, i, StartingOffset);
+					// System.out.println(copyTitles);
+					break;
 				}
 			}
 		}
-		printList(words);
-	}
-
-	void printList(List<MyString> list) {
-		for (MyString object : list) {
-			System.out.print(object.getWord() + " ");
-		}
 		System.out.println();
 	}
-}
 
-class MyString implements Comparable {
-	private String word;
-
-	public MyString(String str) {
-		this.word = str;
+	private void printResult(String word, List<String> titles, int i,
+			int StartingOffSet) {
+		String str = titles.get(i).toLowerCase();
+		System.out.println(replaceCharAt(str, StartingOffSet,
+				word.toUpperCase()));
 	}
 
-	public String getWord() {
-		return word;
+	static String printSpace(int size) {
+		return new String(new char[size]).replace('\0', '.');
 	}
 
-	public void setWord(String word) {
-		this.word = word;
-	}
-
-	public int compareTo(Object object) {
-		MyString myString = (MyString) object;
-		return this.getWord().toLowerCase().compareTo(myString.getWord());
+	public static String replaceCharAt(String s, int pos, String word) {
+		int length = word.length();
+		return s.substring(0, pos) + word + s.substring(pos + length);
 	}
 }
