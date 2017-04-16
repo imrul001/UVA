@@ -1,8 +1,8 @@
 package uva10193;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
@@ -11,10 +11,10 @@ public class Main {
 	}
 
 	private void begin() throws IOException {
-		// BufferedReader reader = new BufferedReader(new FileReader(
-		// "F:\\imrul\\workspace\\UVA\\src\\uva10193\\input.txt"));
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				System.in));
+		BufferedReader reader = new BufferedReader(new FileReader(
+				"F:\\imrul\\workspace\\UVA\\src\\uva10193\\input.txt"));
+		// BufferedReader reader = new BufferedReader(new InputStreamReader(
+		// System.in));
 		int testCases = Integer.parseInt(reader.readLine());
 		for (int i = 1; i <= testCases; i++) {
 			String s1 = reader.readLine();
@@ -34,7 +34,8 @@ public class Main {
 			num2 = r;
 		}
 		if (num1 != 1) {
-			System.out.println("Pair #" + pair + ": All you need is love!");
+			System.out.println("Pair #" + pair + ": All you need is love!"
+					+ num1);
 		} else {
 			System.out.println("Pair #" + pair + ": Love is not all you need!");
 		}
